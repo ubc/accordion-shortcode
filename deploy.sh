@@ -43,8 +43,8 @@ echo "Tagging new version in git"
 git tag -a "$NEWVERSION1" -m "Tagging version $NEWVERSION1"
 
 echo "Pushing latest commit to origin, with tags"
-# git push origin master
-# git push origin master --tags
+git push origin master
+git push origin master --tags
 
 echo
 echo "Creating local copy of SVN repo ..."
@@ -69,9 +69,9 @@ echo "Creating new SVN tag & committing it"
 cd $SVNPATH/
 svn cp trunk tags/$NEWVERSION1
 cd $SVNPATH/tags/$NEWVERSION1
-# svn commit --username=$SVNUSER -m "Tagging version $NEWVERSION1"
+svn commit --username=$SVNUSER -m "Tagging version $NEWVERSION1"
 
 echo "Removing temporary directory $SVNPATH"
-# rm -fr $SVNPATH/
+rm -fr $SVNPATH/
 
 echo "*** FIN ***"

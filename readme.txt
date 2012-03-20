@@ -3,7 +3,7 @@ Contributors: enej, ctlt-dev, ubcdev (this should be a list of wordpress.org use
 Tags: shortcode, accordion
 Requires at least: 3.3
 Tested up to: 3.3
-Stable tag: 1
+Stable tag: 1.1
 
 Lets you easy add accordions into your post and pages using the accordion shortcode
 
