@@ -4,7 +4,7 @@ Plugin Name: Accordion Shortcode
 Plugin URI: http://wordpress.org/extend/plugins/accordion-shortcode/
 Description: Adds shortcode that enables you to create accordions 
 Author: CTLT 
-Version: 1.1
+Version: 1.0.1
 Author URI: http://ctlt.ubc.ca
 */
 global $olt_accordion_shortcode_count;
