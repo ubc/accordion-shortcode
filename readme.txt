@@ -1,5 +1,5 @@
 === Accordion Shortcode ===
-Contributors: enej, ctlt-dev, ubcdev (this should be a list of wordpress.org userid's)
+Contributors: enej, ctlt-dev, ubcdev
 Tags: shortcode, accordion
 Requires at least: 3.3
 Tested up to: 3.3
