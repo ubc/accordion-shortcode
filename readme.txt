@@ -3,7 +3,7 @@ Contributors: enej, ctlt-dev, ubcdev
 Tags: shortcode, accordion
 Requires at least: 3.3
 Tested up to: 3.3
-Stable tag: 1.0.1
+Stable tag: 1.1
 
 Lets you easy add accordions into your post and pages using the accordion shortcode
 
@@ -63,6 +63,10 @@ Another place to look for it would be the http://jqueryui.com/themeroller/, The 
 
 
 == Changelog ==
+= 1.1 = 
+* improved js loading. js only gets loaded when it is needed
+* fixed bugs
+
 
 = 1.0 =
 * Initial release
