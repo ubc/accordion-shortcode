@@ -3,20 +3,42 @@ Contributors: enej, ctlt-dev, ubcdev
 Tags: shortcode, accordion
 Requires at least: 3.3
 Tested up to: 3.3
-Stable tag: 1.1
+Stable tag: 1.2
 
-Lets you easy add accordions into your post and pages using the accordion shortcode
+Lets you easily add accordions into your posts and pages using the accordion shortcode
 
 == Description ==
 
+To make the accordions appear the way you want you need to add your own styling to them
 Lets you add accordion to your post and pages.
 
-By using the following shortcodes.
+By using the following shortcodes
 
 `[accordions]
 [accordion title="title1"] tab content [/accordion]
 [accordion title="title2"] another content tab [/accordion]
 [/accordions]`
+
+will generate the following html. 
+
+`<div id="random-accordion-id-872" class="accordions-shortcode">
+			<h3 id="title1-0" ><a href="#title1-0">title1</a></h3>
+
+			<div class="accordian-shortcode-content" >
+
+				
+ Some Text<br />
+			</div>
+		
+			<h3 id="title2-1" ><a href="#title2-1">title2</a></h3>
+
+			<div class="accordian-shortcode-content " >
+
+				
+ Some Text<br />
+			</div>
+		
+</div>`
 
 
 Additional attributes that you could pass into the shortcode
@@ -28,6 +50,8 @@ Additional attributes that you could pass into the shortcode
  Some Text
 [/accordion]
 [/accordions]`
+
+
 
 == Sample CSS ==
 
@@ -63,6 +87,9 @@ Another place to look for it would be the http://jqueryui.com/themeroller/, The 
 
 
 == Changelog ==
+= 1.2 =
+Trying to commit the changes from git
+
 = 1.1 = 
 * improved js loading. js only gets loaded when it is needed
 * fixed bugs
