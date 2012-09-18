@@ -57,12 +57,16 @@ class OLT_Accordion_Shortcode {
 
 		if($title): ?>
 			<h3 id="<?php echo ereg_replace("[^A-Za-z0-9]", "", $title)."-".self::$shortcode_count; ?>" ><a href="#<?php echo ereg_replace("[^A-Za-z0-9]", "", $title)."-".self::$shortcode_count; ?>"><?php echo $title; ?></a></h3>
+
 			<div class="accordian-shortcode-content <?php echo $class; ?>" >
+
 				<?php echo do_shortcode( $content ); ?>
 			</div>
 		<?php elseif($post->post_title): ?>
 			<h3 id="<?php echo ereg_replace("[^A-Za-z0-9]", "", $post->post_title)."-".self::$shortcode_count; ?>"><a href="#<?php echo ereg_replace("[^A-Za-z0-9]", "", $post->post_title)."-".self::$shortcode_count; ?>"><?php echo $post->post_title; ?></a></h3>
-			<div class="accordian-shortcode-content <?php echo $class; ?>">
+
+			<div class="accordion-shortcode-content <?php echo $class; ?>">
+
 				<?php echo do_shortcode( $content ); ?>
 			</div>
 	    <?php else: ?>
