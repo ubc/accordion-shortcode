@@ -4,7 +4,7 @@ Plugin Name: Accordion Shortcode
 Plugin URI: http://wordpress.org/extend/plugins/accordion-shortcode/
 Description: Adds shortcode that enables you to create accordions
 Author: CTLT
-Version: 1.2
+Version: 2.0
 Author URI: http://ctlt.ubc.ca
 */
 
@@ -16,6 +16,9 @@ class OLT_Accordion_Shortcode {
 	static $add_script;
 	static $shortcode_count;
 	static $shortcode_js_data;
+	static $support;
+	static $current_accordion_id;
+	static $current_active_content;
 	
 	/**
 	 * init function.
@@ -31,6 +34,11 @@ class OLT_Accordion_Shortcode {
 
 		add_action('init', array(__CLASS__, 'register_script'));
 		add_action('wp_footer', array(__CLASS__, 'print_script'));
+		
+		/* Apply filters to the tabs content. */
+		add_filter( 'accordion_content', 'wpautop' );
+		add_filter( 'accordion_content', 'shortcode_unautop' );
+		add_filter( 'accordion_content', 'do_shortcode' );
 		
 		self::$shortcode_count = 0;
 
@@ -48,32 +56,37 @@ class OLT_Accordion_Shortcode {
 	public static  function accordion_shortcode( $atts, $content ) {
 		global $post;
 		
+		$selected = ( self::$current_active_content == self::$shortcode_count ? true : false ); 
 		extract(shortcode_atts(array(
 					'title' => null,
 					'class' => null,
-				), $atts) );
-
+					'before_shell' => '',
+					'after_shell'  => '',
+					'before' => '',
+					'after'  => '',
+					'heading_tag' => 'h3',
+					'heading_link_attr' => '',
+					'heading_attr' => ''
+				), apply_filters( 'accordion-shortcode-atts', $atts, $selected ) ) );
+		
 		ob_start();
-
-		if($title): ?>
-			<h3 id="<?php echo ereg_replace("[^A-Za-z0-9]", "", $title)."-".self::$shortcode_count; ?>" ><a href="#<?php echo ereg_replace("[^A-Za-z0-9]", "", $title)."-".self::$shortcode_count; ?>"><?php echo $title; ?></a></h3>
-
-			<div class="accordian-shortcode-content <?php echo $class; ?>" >
-				<?php echo do_shortcode( $content ); ?>
-			</div>
-		<?php elseif($post->post_title): ?>
-			<h3 id="<?php echo ereg_replace("[^A-Za-z0-9]", "", $post->post_title)."-".self::$shortcode_count; ?>"><a href="#<?php echo ereg_replace("[^A-Za-z0-9]", "", $post->post_title)."-".self::$shortcode_count; ?>"><?php echo $post->post_title; ?></a></h3>
-
-			<div class="accordion-shortcode-content <?php echo $class; ?>">
-				<?php echo do_shortcode( $content ); ?>
-			</div>
-	    <?php else: ?>
-			<span style="color:red">Please enter a title attribute like [accordion title="title name"]accordion content[accordion]</span>
-		<?php endif;
-
+		
+		
+		
+		$title 		= ( empty( $title ) ? $post->post_title : $title );
+		$id 		= ereg_replace("[^A-Za-z0-9]", "", $title )."-".self::$shortcode_count;
+		
+		if( empty( $title ) )
+			return '<span style="color:red">Please enter a title attribute like [accordion title="title name"] accordion content [accordion]</span>';
+			
 		self::$shortcode_count++;
 
-		return ob_get_clean();
+		$str  = $before_shell;
+		$str .= '<'. $heading_tag .' '. $heading_attr .'><a href="#'. $id .'" '. $heading_link_attr .'>'. $title .'</a></'. $heading_tag .'>';
+		$str .= '<div id="'. $id .'" class="accordian-shortcode-content '. $class. '" >'. $before. apply_filters( 'accordion_content', $content ) . $after. '</div>';
+		$str .= $after_shell;
+		
+		return $str;
 	}
 	
 	/**
@@ -101,6 +114,26 @@ class OLT_Accordion_Shortcode {
 	public static function accordions_shortcode( $atts, $content ) {
 		
 		self::$add_script = true;
+		if( is_string($atts) )
+			$atts = array();
+		
+		$atts = apply_filters( 'accordion-shortcode-accordion-atts', $atts );
+		
+		$defaults = array(
+					'autoheight' => false,
+					'disabled' => false,
+					'active' => 0,
+					'clearStyle'  => false,
+					'collapsible' => false,
+					'fillSpace' => false,
+					'before' =>'',
+					'after' => '',
+					'class' => ''
+				);
+		
+		$atts = shortcode_atts( $defaults , apply_filters( 'accordions-shortcode-atts', $atts ) );
+		
+		self::$current_active_content = $atts['active'];
 		
 		$attr['autoHeight'] = self::eval_bool( $atts['autoheight'] ); 		
 		$attr['disabled']  	= self::eval_bool( $atts['disabled'] );
@@ -109,23 +142,22 @@ class OLT_Accordion_Shortcode {
 		$attr['collapsible']= self::eval_bool( $atts['collapsible']);
 		$attr['fillSpace'] 	= self::eval_bool( $atts['fillspace']);
 		
-		$query_atts = shortcode_atts( array(
-				'autoHeight'  => false,
-				'disabled'   => false,
-				'active'  => 0,
-				'animated'   => 'slide',
-				'clearStyle'  => false,
-				'collapsible'  => false,
-				'event'   => 'click',
-				'fillSpace'  => false
-			), $attr);
-		$id = "random-accordion-id-".rand(0,1000);
+		$query_defaults = $defaults;
+		unset( $query_defaults['before'], $query_defaults['after'], $query_defaults['class'] );
+		$query_defaults['animated'] = 'slide';
+		$query_defaults['event'] = 'click';
+		
+		$query_atts = shortcode_atts( $query_defaults , $attr );
+		
+		self::$current_accordion_id = "random-accordion-id-".rand(0,1000);
 
 		$content = str_replace( "]<br />","]", ( substr( $content, 0 , 6 ) == "<br />" ? substr( $content, 6 ): $content ) );
 
-		self::$shortcode_js_data[$id] = $query_atts;
-
-		return str_replace("\r\n", '', '<div id="'.$id.'" class="accordions-shortcode">'.do_shortcode( $content ).'</div>');
+		self::$shortcode_js_data[self::$current_accordion_id] = $query_atts;
+		
+		
+	
+		return str_replace("\r\n", '', '<div id="'.self::$current_accordion_id.'" class="'.$atts['class'].'">'.$atts['before'].do_shortcode( $content ).$atts['after'].'</div><!-- #'.self::$current_accordion_id.'end of accordion shortcode -->');
 
 	}
 	
@@ -137,7 +169,15 @@ class OLT_Accordion_Shortcode {
 	 * @return void
 	 */
 	static function register_script() {
-		wp_register_script( 'accordion-shortcode' , plugins_url('accordion.js', __FILE__), array('jquery', 'jquery-ui-core', 'jquery-ui-accordion'), '1.0', true );
+		self::$support = get_theme_support( 'accordions' );
+		
+		if( 'twitter-bootstrap' != self::$support[0] ):
+		
+			wp_register_script( 'accordion-shortcode' , plugins_url('accordion.js', __FILE__), array('jquery', 'jquery-ui-core', 'jquery-ui-accordion'), '1.0', true );
+		endif;
+		
+		if( 'twitter-bootstrap' == self::$support[0] )
+			require_once( 'support/twitter-bootstrap/action.php' );
 	}
 	
 	/**
@@ -151,12 +191,11 @@ class OLT_Accordion_Shortcode {
 		
 		if ( ! self::$add_script )
 			return;
-		
-		wp_enqueue_script( 'accordion-shortcode' );
-		wp_localize_script( 'accordion-shortcode', 'accordion_shortcode', self::$shortcode_js_data );
-		wp_enqueue_script( 'jquery' );
-		wp_enqueue_script( 'jquery-ui-core' );
-		wp_enqueue_script( 'jquery-ui-accordion' );
+	
+		if('twitter-bootstrap' != self::$support[0] ):
+			wp_enqueue_script( 'accordion-shortcode' );
+			wp_localize_script( 'accordion-shortcode', 'accordion_shortcode', self::$shortcode_js_data );
+		endif;
 	}
 }
 // lets play
