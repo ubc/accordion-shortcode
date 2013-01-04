@@ -3,7 +3,7 @@ Contributors: enej, ctlt-dev, ubcdev
 Tags: shortcode, accordion
 Requires at least: 3.3
 Tested up to: 3.3
-Stable tag: 1.2.1
+Stable tag: 2.0
 
 Lets you easily add accordions into your posts and pages using the accordion shortcode
 
@@ -51,7 +51,13 @@ Additional attributes that you could pass into the shortcode
 [/accordion]
 [/accordions]`
 
+== FAQ ==
 
+**I found a bug where can I submit a bug report/make a change to the code?**
+Feel free to submit your bug report in the forum. We check it every so often. 
+
+If you want to contribute to the code we do accept pull requests on github.
+https://github.com/ubc/tabs-shortcode 
 
 == Sample CSS ==
 
@@ -60,22 +66,6 @@ Another place to look for it would be the http://jqueryui.com/themeroller/, The 
 
 
 `
-.ui-accordion-header{
-	margin:5px 0 0;
-}
-.ui-accordion-header a{
-	padding:5px 12px;
-	background: #CCC; 
-	color:#FFF;
-	display:block;
-}
-.ui-accordion-header.ui-state-active a,
-.ui-accordion-header a:hover{
-	background-color: #DDD;
-}
-.ui-accordion-content{
-	padding-top:10px;
-}
 
 `
 
@@ -89,6 +79,7 @@ Another place to look for it would be the http://jqueryui.com/themeroller/, The 
 == Changelog ==
 = 2.0 = 
 * added support for the twitter bootstrap
+
 
 = 1.2.1 =
 * removed php warnings

@@ -33,6 +33,7 @@ class OLT_Accordion_Shortcode {
 		add_shortcode('accordions', array(__CLASS__, 'accordions_shortcode'));
 
 		add_action('init', array(__CLASS__, 'register_script'));
+		add_action( 'wp_enqueue_scripts', array(__CLASS__, 'enqueue_style' ) );
 		add_action('wp_footer', array(__CLASS__, 'print_script'));
 		
 		/* Apply filters to the tabs content. */
@@ -123,9 +124,9 @@ class OLT_Accordion_Shortcode {
 					'autoheight' => false,
 					'disabled' => false,
 					'active' => 0,
-					'clearStyle'  => false,
+					'clearstyle'  => false,
 					'collapsible' => false,
-					'fillSpace' => false,
+					'fillspace' => false,
 					'before' =>'',
 					'after' => '',
 					'class' => ''
@@ -135,10 +136,13 @@ class OLT_Accordion_Shortcode {
 		
 		self::$current_active_content = $atts['active'];
 		
+		
 		$attr['autoHeight'] = self::eval_bool( $atts['autoheight'] ); 		
 		$attr['disabled']  	= self::eval_bool( $atts['disabled'] );
 		$attr['active']  	= (int)$atts['active'];
+		
 		$attr['clearStyle'] = self::eval_bool( $atts['clearstyle']);
+		
 		$attr['collapsible']= self::eval_bool( $atts['collapsible']);
 		$attr['fillSpace'] 	= self::eval_bool( $atts['fillspace']);
 		
@@ -155,9 +159,7 @@ class OLT_Accordion_Shortcode {
 
 		self::$shortcode_js_data[self::$current_accordion_id] = $query_atts;
 		
-		
-	
-		return str_replace("\r\n", '', '<div id="'.self::$current_accordion_id.'" class="'.$atts['class'].'">'.$atts['before'].do_shortcode( $content ).$atts['after'].'</div><!-- #'.self::$current_accordion_id.'end of accordion shortcode -->');
+		return str_replace("\r\n", '', '<div id="'.self::$current_accordion_id.'" class="accordion-shortcode '.$atts['class'].'">'.$atts['before'].do_shortcode( $content ).$atts['after'].'</div><!-- #'.self::$current_accordion_id.'end of accordion shortcode -->');
 
 	}
 	
@@ -173,11 +175,26 @@ class OLT_Accordion_Shortcode {
 		
 		if( 'twitter-bootstrap' != self::$support[0] ):
 		
-			wp_register_script( 'accordion-shortcode' , plugins_url('accordion.js', __FILE__), array('jquery', 'jquery-ui-core', 'jquery-ui-accordion'), '1.0', true );
+			wp_register_script( 'accordion-shortcode' , plugins_url('accordion.js', __FILE__), array( 'jquery', 'jquery-ui-core', 'jquery-ui-accordion' ), '1.0', true );
 		endif;
+		
+		wp_register_style( 'accordion-shortcode',  plugins_url( 'accordion.css', __FILE__ ) );
 		
 		if( 'twitter-bootstrap' == self::$support[0] )
 			require_once( 'support/twitter-bootstrap/action.php' );
+	}
+	
+	/**
+	 * enqueue_style function.
+	 * 
+	 * @access public
+	 * @static
+	 * @return void
+	 */
+	static function enqueue_style() {
+		if( empty( self::$support ) )
+			wp_enqueue_style( 'accordion-shortcode' );
+		
 	}
 	
 	/**
