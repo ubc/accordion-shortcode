@@ -4,7 +4,7 @@ Plugin Name: Accordion Shortcode
 Plugin URI: http://wordpress.org/extend/plugins/accordion-shortcode/
 Description: Adds shortcode that enables you to create accordions
 Author: CTLT
-Version: 2.0
+Version: 2.1
 Author URI: http://ctlt.ubc.ca
 */
 
@@ -113,14 +113,19 @@ class OLT_Accordion_Shortcode {
 	 * @return void
 	 */
 	public static function accordions_shortcode( $atts, $content ) {
-		
+		global $wp_version;
 		self::$add_script = true;
 		if( is_string($atts) )
 			$atts = array();
 		
 		$atts = apply_filters( 'accordion-shortcode-accordion-atts', $atts );
 		
-		$defaults = array(
+		
+		
+		if ( version_compare( $wp_version, '3.5', '>=' ) ):
+		// AFTER 3.5
+			$defaults = array(
+					'heightstyle'=> 'auto',
 					'autoheight' => false,
 					'disabled' => false,
 					'active' => 0,
@@ -131,12 +136,29 @@ class OLT_Accordion_Shortcode {
 					'after' => '',
 					'class' => ''
 				);
+		else:
+		// PRE 3.5
 		
-		$atts = shortcode_atts( $defaults , apply_filters( 'accordions-shortcode-atts', $atts ) );
+			$defaults = array(
+					'autoheight' => false,
+					'disabled' => false,
+					'active' => 0,
+					'clearstyle'  => false,
+					'collapsible' => false,
+					'fillspace' => false,
+					'before' =>'',
+					'after' => '',
+					'class' => ''
+				);
+		endif;
+		
+		$atts = shortcode_atts(  $defaults , apply_filters( 'accordions-shortcode-atts', $atts ) );
 		
 		self::$current_active_content = $atts['active'];
 		
-		
+		if ( version_compare( $wp_version, '3.5', '>=' ) ):
+			$attr['heightStyle'] =  $atts['heightstyle']; 
+		endif;
 		$attr['autoHeight'] = self::eval_bool( $atts['autoheight'] ); 		
 		$attr['disabled']  	= self::eval_bool( $atts['disabled'] );
 		$attr['active']  	= (int)$atts['active'];
@@ -146,18 +168,19 @@ class OLT_Accordion_Shortcode {
 		$attr['collapsible']= self::eval_bool( $atts['collapsible']);
 		$attr['fillSpace'] 	= self::eval_bool( $atts['fillspace']);
 		
-		$query_defaults = $defaults;
+		// $query_defaults = $defaults;
 		unset( $query_defaults['before'], $query_defaults['after'], $query_defaults['class'] );
 		$query_defaults['animated'] = 'slide';
 		$query_defaults['event'] = 'click';
 		
-		$query_atts = shortcode_atts( $query_defaults , $attr );
+		// var_dump($query_defaults,'--------------', $attr);
+	
 		
 		self::$current_accordion_id = "random-accordion-id-".rand(0,1000);
 
 		$content = str_replace( "]<br />","]", ( substr( $content, 0 , 6 ) == "<br />" ? substr( $content, 6 ): $content ) );
 
-		self::$shortcode_js_data[self::$current_accordion_id] = $query_atts;
+		self::$shortcode_js_data[self::$current_accordion_id] = $attr;
 		
 		return str_replace("\r\n", '', '<div id="'.self::$current_accordion_id.'" class="accordion-shortcode '.$atts['class'].'">'.$atts['before'].do_shortcode( $content ).$atts['after'].'</div><!-- #'.self::$current_accordion_id.'end of accordion shortcode -->');
 
