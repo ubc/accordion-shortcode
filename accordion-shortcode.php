@@ -75,7 +75,7 @@ class OLT_Accordion_Shortcode {
 		
 		
 		$title 		= ( empty( $title ) ? $post->post_title : $title );
-		$id 		= ereg_replace("[^A-Za-z0-9]", "", $title )."-".self::$shortcode_count;
+		$id 		= preg_replace("/[^A-Za-z0-9]/", "", $title )."-".self::$shortcode_count;
 		
 		if( empty( $title ) )
 			return '<span style="color:red">Please enter a title attribute like [accordion title="title name"] accordion content [accordion]</span>';
@@ -159,14 +159,14 @@ class OLT_Accordion_Shortcode {
 		if ( version_compare( $wp_version, '3.5', '>=' ) ):
 			$attr['heightStyle'] =  $atts['heightstyle']; 
 		endif;
-		$attr['autoHeight'] = self::eval_bool( $atts['autoheight'] ); 		
-		$attr['disabled']  	= self::eval_bool( $atts['disabled'] );
-		$attr['active']  	= (int)$atts['active'];
-		
-		$attr['clearStyle'] = self::eval_bool( $atts['clearstyle']);
-		
-		$attr['collapsible']= self::eval_bool( $atts['collapsible']);
-		$attr['fillSpace'] 	= self::eval_bool( $atts['fillspace']);
+		$attr['autoHeight'] = isset($atts['autoheight']) ? self::eval_bool( $atts['autoheight'] ):'';
+		$attr['disabled'] = isset($atts['disabled']) ? self::eval_bool( $atts['disabled'] ):'';
+		$attr['active'] = isset($atts['active']) ? (int)$atts['active']:'';
+
+		$attr['clearStyle'] = isset($atts['clearstyle']) ? self::eval_bool( $atts['clearstyle']):'';
+
+		$attr['collapsible']= isset($atts['collapsible']) ? self::eval_bool( $atts['collapsible']):'';
+		$attr['fillSpace'] = isset($atts['fillspace']) ? self::eval_bool( $atts['fillspace']):'';
 		
 		// $query_defaults = $defaults;
 		unset( $query_defaults['before'], $query_defaults['after'], $query_defaults['class'] );
