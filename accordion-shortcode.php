@@ -4,7 +4,7 @@ Plugin Name: Accordion Shortcode
 Plugin URI: http://wordpress.org/extend/plugins/accordion-shortcode/
 Description: Adds shortcode that enables you to create accordions
 Author: CTLT
-Version: 2.1.1
+Version: 2.1.2
 Author URI: http://ctlt.ubc.ca
 */
 
@@ -154,20 +154,33 @@ class OLT_Accordion_Shortcode {
 		
 		$atts = shortcode_atts(  $defaults , apply_filters( 'accordions-shortcode-atts', $atts ) );
 		
-		self::$current_active_content = $atts['active'];
-		
 		if ( version_compare( $wp_version, '3.5', '>=' ) ):
 			$attr['heightStyle'] =  $atts['heightstyle']; 
 		endif;
 		$attr['autoHeight'] = self::eval_bool( $atts['autoheight'] ); 		
 		$attr['disabled']  	= self::eval_bool( $atts['disabled'] );
-		$attr['active']  	= (int)$atts['active'];
-		
 		$attr['clearStyle'] = self::eval_bool( $atts['clearstyle']);
 		
 		$attr['collapsible']= self::eval_bool( $atts['collapsible']);
 		$attr['fillSpace'] 	= self::eval_bool( $atts['fillspace']);
 		
+		if ($attr['collapsible']) {
+			if (!is_int($atts['active'])) {
+				//is_bool($atts['active']) && !$atts['active'])
+				if (!self::eval_bool( $atts['active'] )) {
+					$attr['active'] = -1;
+				} else {
+					$attr['active'] = $default['active'];
+				}
+			} else {
+				$attr['active'] = $atts['active'];
+			}
+		} else {
+			$attr['active'] = (int)$atts['active'];
+		}
+
+		self::$current_active_content = $attr['active'];
+
 		// $query_defaults = $defaults;
 		unset( $query_defaults['before'], $query_defaults['after'], $query_defaults['class'] );
 		$query_defaults['animated'] = 'slide';
