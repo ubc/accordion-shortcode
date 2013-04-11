@@ -42,7 +42,7 @@ will generate the following html.
 
 
 Additional attributes that you could pass into the shortcode
-`[accordions autoHeight='true'  disabled='false' active=0  clearStyle=false collapsible=false fillSpace=false ]
+`[accordions autoHeight='true'  disabled='false' active=false clearStyle=false collapsible=false fillSpace=false ]
 [accordion title='title1' class='new-class']
  Some Text
 [/accordion]
