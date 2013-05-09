@@ -1,0 +1,86 @@
+.youtube-embed {
+    width: 100%;
+    overflow: hidden;
+    outline: 1px solid lightgray;
+}
+
+.youtube-embed br {
+    display: none;
+}
+
+.youtube-wrapper {
+    display: inline-block;
+    float: left;
+    width: 100%;
+    min-width: 352px;
+    max-width: 450px;
+}
+
+.swfobject-wrapper {
+    position: relative;
+    width: 100%;
+    background: black;
+}
+
+.youtube-embed .swfobject-wrapper object {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    top: 0; bottom: 0; left: 0; right: 0;
+}
+
+.iframe-wrapper {
+    position: relative;
+    width: 100%;
+}
+
+.youtube-embed .iframe-wrapper iframe {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    top: 0; bottom: 0; left: 0; right: 0;
+}
+
+.youtube-embed .youtube-controls ul {
+    list-style: none;
+    margin-bottom: 0;
+    width: 100%;
+}
+
+.youtube-embed .youtube-controls li {
+    line-height: 10px;
+    margin: 0;
+    /*border-bottom: 1px solid #EEE;*/
+}
+
+.youtube-embed .youtube-controls li.title {
+    font-weight: bold;
+    text-transform: uppercase;
+    font-size: 0.785rem;
+    /*border-bottom-color: lightgrey;*/
+}
+
+.youtube-embed .youtube-controls li.control {
+    cursor: pointer;
+    font-size: 0.85rem;
+}
+
+.youtube-embed .youtube-controls li > * {
+    display: inline-block;
+    padding: 10px;
+}
+
+.youtube-controls li.control:hover {
+    background: #EEE;
+    color: #21759B;
+}
+
+.youtube-embed .error {
+    margin: auto;
+    color: #D00;
+    padding-left: 20px;
+    padding-right: 20px;
+    padding-top: 50px;
+    margin-bottom: -250px;
+    text-align: center;
+}
