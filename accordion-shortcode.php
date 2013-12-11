@@ -75,7 +75,7 @@ class OLT_Accordion_Shortcode {
 		
 		
 		$title 		= ( empty( $title ) ? $post->post_title : $title );
-		$id 		= ereg_replace("[^A-Za-z0-9]", "", $title )."-".self::$shortcode_count;
+		$id 		= preg_replace("/[^A-Za-z0-9]/", "", $title )."-".self::$shortcode_count;
 		
 		if( empty( $title ) )
 			return '<span style="color:red">Please enter a title attribute like [accordion title="title name"] accordion content [accordion]</span>';
@@ -170,7 +170,7 @@ class OLT_Accordion_Shortcode {
 				if (!self::eval_bool( $atts['active'] )) {
 					$attr['active'] = -1;
 				} else {
-					$attr['active'] = $default['active'];
+					$attr['active'] = isset($default['active']) && $default['active'] ? $default['active'] : 0;
 				}
 			} else {
 				$attr['active'] = $atts['active'];
@@ -180,14 +180,6 @@ class OLT_Accordion_Shortcode {
 		}
 
 		self::$current_active_content = $attr['active'];
-
-		// $query_defaults = $defaults;
-		unset( $query_defaults['before'], $query_defaults['after'], $query_defaults['class'] );
-		$query_defaults['animated'] = 'slide';
-		$query_defaults['event'] = 'click';
-		
-		// var_dump($query_defaults,'--------------', $attr);
-	
 		
 		self::$current_accordion_id = "random-accordion-id-".rand(0,1000);
 
