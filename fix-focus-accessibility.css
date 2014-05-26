@@ -1,0 +1,6 @@
+/* Mimic :focus and :active styles when we have a class of that name */
+.accordion-group .accordion-heading a.hover, .accordion-group .accordion-heading a.active, .accordion-group .accordion-heading a.focus{
+	background: #002145;
+	color: #fff;
+	text-decoration: none;
+}
