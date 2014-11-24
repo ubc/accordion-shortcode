@@ -42,6 +42,7 @@ class OLT_Accordion_Shortcode {
 		add_filter( 'accordion_content', 'do_shortcode' );
 		
 		self::$shortcode_count = 0;
+		add_filter( 'no_texturize_shortcodes', array( __CLASS__, 'no_texturize_shortcodes_removeAccordionsFromTexturize' ) );
 
 	}
 	
@@ -75,7 +76,7 @@ class OLT_Accordion_Shortcode {
 		
 		
 		$title 		= ( empty( $title ) ? $post->post_title : $title );
-		$id 		= preg_replace("/[^A-Za-z0-9]/", "", $title )."-".self::$shortcode_count;
+		$id 		= substr( trim( sanitize_title_with_dashes( $title ) ), 0, 30 ).'-'.self::$shortcode_count;
 		
 		if( empty( $title ) )
 			return '<span style="color:red">Please enter a title attribute like [accordion title="title name"] accordion content [accordion]</span>';
@@ -251,6 +252,16 @@ class OLT_Accordion_Shortcode {
 		wp_enqueue_script( 'accordion-shortcode-accessibility-fix' );
 		wp_localize_script( 'accordion-shortcode-accessibility-fix', 'accordion_shortcode_fix', self::$shortcode_js_data );
 	}
+
+		public static function no_texturize_shortcodes_removeAccordionsFromTexturize( $shortcodes )
+	{
+
+		$shortcodes[] = 'accordion';
+		$shortcodes[] = 'accordions';
+
+		return $shortcodes;
+
+	}/* no_texturize_shortcodes_removeAccordionsFromTexturize fixes filters not using proper shortcode API https://wordpress.org/support/topic/issues-with-wordpress-401-and-shortcodes and ticket https://core.trac.wordpress.org/ticket/29557 */
 }
 // lets play
 OLT_Accordion_Shortcode::init();
