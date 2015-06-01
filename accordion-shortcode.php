@@ -175,7 +175,7 @@ class OLT_Accordion_Shortcode {
 				//is_bool($atts['active']) && !$atts['active'])
 				if ( ! self::eval_bool( $atts['active'] ) ) {
 
-					//confilct between none collab and other blogs
+					//confilct between none collab and other themes
 					if ( 'twitter-bootstrap' != self::$support[0] ) :
 
 						$attr['active'] = false;

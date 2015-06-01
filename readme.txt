@@ -3,7 +3,7 @@ Contributors: enej, ctlt-dev, ubcdev
 Tags: shortcode, accordion
 Requires at least: 3.3
 Tested up to: 3.3
-Stable tag: 2.1.1
+Stable tag: 2.1.2
 
 Lets you easily add accordions into your posts and pages using the accordion shortcode
 
@@ -19,25 +19,25 @@ By using the following shortcodes
 [accordion title="title2"] another content tab [/accordion]
 [/accordions]`
 
-will generate the following html. 
+will generate the following html.
 
 `<div id="random-accordion-id-872" class="accordions-shortcode">
 			<h3 id="title1-0" ><a href="#title1-0">title1</a></h3>
 
 			<div class="accordian-shortcode-content" >
 
-				
+
  Some Text<br />
 			</div>
-		
+
 			<h3 id="title2-1" ><a href="#title2-1">title2</a></h3>
 
 			<div class="accordian-shortcode-content " >
 
-				
+
  Some Text<br />
 			</div>
-		
+
 </div>`
 
 
@@ -54,15 +54,15 @@ Additional attributes that you could pass into the shortcode
 == FAQ ==
 
 **I found a bug where can I submit a bug report/make a change to the code?**
-Feel free to submit your bug report in the forum. We check it every so often. 
+Feel free to submit your bug report in the forum. We check it every so often.
 
 If you want to contribute to the code we do accept pull requests on github.
-https://github.com/ubc/tabs-shortcode 
+https://github.com/ubc/tabs-shortcode
 
 == Sample CSS ==
 
-Here is some sample css to get you started. 
-Another place to look for it would be the http://jqueryui.com/themeroller/, The shortcode used the jQuery UI to generate the accordion. 
+Here is some sample css to get you started.
+Another place to look for it would be the http://jqueryui.com/themeroller/, The shortcode used the jQuery UI to generate the accordion.
 
 
 `
@@ -73,17 +73,21 @@ Another place to look for it would be the http://jqueryui.com/themeroller/, The 
 
 1. Extract the zip file into wp-content/plugins/ in your WordPress installation
 1. Go to plugins page to activate
-1. Add styles to make the accordion look the way you want. 
+1. Add styles to make the accordion look the way you want.
 
 
 == Changelog ==
-= 2.1.1 = 
+= 2.1.2 =
+* Bug fixes
+* Added the ability include class selectors for the accordion container and the accordion heading-toggle
+
+= 2.1.1 =
 * More bug fixes
 
-= 2.1 = 
+= 2.1 =
 * Bug fixes
 
-= 2.0 = 
+= 2.0 =
 * added support for the twitter bootstrap
 
 
@@ -93,7 +97,7 @@ Another place to look for it would be the http://jqueryui.com/themeroller/, The 
 = 1.2 =
 Trying to commit the changes from git
 
-= 1.1 = 
+= 1.1 =
 * improved js loading. js only gets loaded when it is needed
 * fixed bugs
 

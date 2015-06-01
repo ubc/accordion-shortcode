@@ -18,7 +18,7 @@ function accordion_shortcode_twitter_bootstrap_atts( $atts, $selected ) {
 
 }
 
-add_action( 'accordion-shortcode-atts', 'accordion_shortcode_twitter_bootstrap_atts', 10 , 2);
+add_action( 'accordion-shortcode-atts', 'accordion_shortcode_twitter_bootstrap_atts', 10 , 2 );
 
 
 function accordions_shortcode_twitter_bootstrap_atts( $atts ) {
@@ -29,4 +29,4 @@ function accordions_shortcode_twitter_bootstrap_atts( $atts ) {
 
 }
 
-add_action( 'accordions-shortcode-atts', 'accordions_shortcode_twitter_bootstrap_atts');
+add_action( 'accordions-shortcode-atts', 'accordions_shortcode_twitter_bootstrap_atts' );
