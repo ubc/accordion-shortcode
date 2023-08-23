@@ -98,7 +98,7 @@ class OLT_Accordion_Shortcode {
 	 * @access public
 	 * @static
 	 * @param mixed $item
-	 * @return void
+	 * @return bool
 	 */
 	static function eval_bool( $item ) {
 
@@ -176,7 +176,7 @@ class OLT_Accordion_Shortcode {
 				if ( ! self::eval_bool( $atts['active'] ) ) {
 
 					//confilct between none collab and other themes
-					if ( 'twitter-bootstrap' != self::$support[0] ) :
+					if ( ! array_key_exists( 0, self::$support ) || 'twitter-bootstrap' != self::$support[0] ) :
 
 						$attr['active'] = false;
 
@@ -187,7 +187,7 @@ class OLT_Accordion_Shortcode {
 					endif;
 
 				} else {
-					$attr['active'] = isset( $default['active'] ) && $default['active'] ? $default['active'] : 0;
+					$attr['active'] = isset( $defaults['active'] ) && $defaults['active'] ? $defaults['active'] : 0;
 				}
 			} else {
 				$attr['active'] = $atts['active'];
@@ -219,21 +219,22 @@ class OLT_Accordion_Shortcode {
 
 		self::$support = get_theme_support( 'accordions' );
 
-		if ( 'twitter-bootstrap' != self::$support[0] ) :
+		if ( ! is_array( self::$support ) ) {
+			self::$support = array();
+		}
 
-			wp_register_script( 'accordion-shortcode' , plugins_url( 'accordion.js', __FILE__ ), array( 'jquery', 'jquery-ui-core', 'jquery-ui-accordion' ), '1.0', true );
-		endif;
+		if ( ! array_key_exists( 0, self::$support ) || 'twitter-bootstrap' !== self::$support[0] ) {
+			wp_register_script( 'accordion-shortcode', plugins_url( 'accordion.js', __FILE__ ), array( 'jquery', 'jquery-ui-core', 'jquery-ui-accordion' ), '1.0', true );
+		}
 
 		wp_register_style( 'accordion-shortcode',  plugins_url( 'accordion.css', __FILE__ ) );
 		wp_register_style( 'accordion-shortcode-accessibility-fix',  plugins_url( 'fix-focus-accessibility.css', __FILE__ ) );
 
 		wp_register_script( 'accordion-shortcode-accessibility-fix' , plugins_url( 'fix-focus-accessibility.js', __FILE__ ), array( 'jquery', 'jquery-ui-core', 'jquery-ui-accordion' ), '1.0', true );
 
-		if ( 'twitter-bootstrap' == self::$support[0] ) :
-
-			require_once( 'support/twitter-bootstrap/action.php' );
-
-		endif;
+		if ( array_key_exists( 0, self::$support ) && 'twitter-bootstrap' === self::$support[0] ) {
+			require_once 'support/twitter-bootstrap/action.php';
+		}
 	}
 
 	/**
@@ -268,10 +269,10 @@ class OLT_Accordion_Shortcode {
 
 		endif;
 
-		if ( 'twitter-bootstrap' != self::$support[0] ) :
+		if ( ! array_key_exists( 0, self::$support ) || 'twitter-bootstrap' !== self::$support[0] ) {
 			wp_enqueue_script( 'accordion-shortcode' );
 			wp_localize_script( 'accordion-shortcode', 'accordion_shortcode', self::$shortcode_js_data );
-		endif;
+		}
 
 		wp_enqueue_script( 'accordion-shortcode-accessibility-fix' );
 		wp_localize_script( 'accordion-shortcode-accessibility-fix', 'accordion_shortcode_fix', self::$shortcode_js_data );
