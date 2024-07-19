@@ -62,6 +62,7 @@ class OLT_Accordion_Shortcode {
 		extract(shortcode_atts(array(
 					'title' => null,
 					'class' => null,
+					'id' => null,
 					'before_shell' => '',
 					'after_shell'  => '',
 					'before' => '',
@@ -140,6 +141,7 @@ class OLT_Accordion_Shortcode {
 					'after' => '',
 					'class' => '',
 					'style' => '',
+					'id' => null,
 				);
 		else :
 			// PRE 3.5
@@ -155,6 +157,7 @@ class OLT_Accordion_Shortcode {
 					'after' => '',
 					'class' => '',
 					'style' => '',
+					'id' => null,
 				);
 		endif;
 
@@ -169,6 +172,8 @@ class OLT_Accordion_Shortcode {
 
 		$attr['collapsible'] = self::eval_bool( $atts['collapsible'] );
 		$attr['fillSpace'] 	= self::eval_bool( $atts['fillspace'] );
+
+		self::$current_accordion_id = empty( $atts['id'] ) ? 'random-accordion-id-'.rand( 0,1000 ) : trim( sanitize_title_with_dashes( $atts['id'] ) );
 
 		if ( $attr['collapsible'] ) {
 			if ( ! is_int( $atts['active'] ) ) {
@@ -197,8 +202,6 @@ class OLT_Accordion_Shortcode {
 		}
 
 		self::$current_active_content = $attr['active'];
-
-		self::$current_accordion_id = 'random-accordion-id-'.rand( 0,1000 );
 
 		$content = str_replace( ']<br />',']', ( substr( $content, 0 , 6 ) == '<br />' ? substr( $content, 6 ): $content ) );
 
