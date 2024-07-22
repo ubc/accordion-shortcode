@@ -75,7 +75,7 @@ class OLT_Accordion_Shortcode {
 		ob_start();
 
 		$title 		= ( empty( $title ) ? $post->post_title : $title );
-		$id 		= substr( trim( sanitize_title_with_dashes( $title ) ), 0, 30 ).'-'.self::$shortcode_count;
+		$id         = isset( $atts['id'] ) ? sanitize_title( $atts['id'] ) : substr( trim( sanitize_title_with_dashes( $title ) ), 0, 30 ).'-'.self::$shortcode_count;
 
 		if ( empty( $title ) ) :
 
