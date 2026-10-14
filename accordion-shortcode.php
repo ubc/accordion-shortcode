@@ -47,6 +47,38 @@ class OLT_Accordion_Shortcode {
 	}
 
 	/**
+	 * selector_safe_id function.
+	 *
+	 * sanitize_title_with_dashes() percent-encodes non-ASCII text, so a title
+	 * such as 解說 comes back as %e8%a7%a3%e8%aa%aa. A percent sign is not valid
+	 * in a CSS identifier, so as soon as that id is handed back to jQuery as a
+	 * selector -- accordion.js does $( '#' + id ), Bootstrap's collapse plugin
+	 * does $( href ) -- jQuery throws "Syntax error, unrecognized expression:
+	 * #%e8%a7%a3%e8%aa%aa-1" and the accordion never opens. Keep the octets as
+	 * plain hex instead: still deterministic, but legal in a selector. Titles
+	 * that are already ASCII are untouched.
+	 *
+	 * @access public
+	 * @static
+	 * @param mixed $text
+	 * @return string
+	 */
+	static function selector_safe_id( $text ) {
+
+		// remove_accents() first, so accented Latin titles still get a readable id.
+		$id = trim( sanitize_title_with_dashes( remove_accents( $text ) ) );
+
+		if ( false !== strpos( $id, '%' ) ) {
+
+			$id = 'accordion-' . trim( str_replace( '%', '', $id ), '-' );
+
+		}
+
+		return $id;
+
+	}
+
+	/**
 	 * accordion_shortcode function.
 	 *
 	 * @access public
@@ -75,7 +107,7 @@ class OLT_Accordion_Shortcode {
 		ob_start();
 
 		$title 		= ( empty( $title ) ? $post->post_title : $title );
-		$id         = isset( $atts['id'] ) ? sanitize_title( $atts['id'] ) : substr( trim( sanitize_title_with_dashes( $title ) ), 0, 30 ).'-'.self::$shortcode_count;
+		$id         = isset( $atts['id'] ) ? self::selector_safe_id( $atts['id'] ) : substr( self::selector_safe_id( $title ), 0, 30 ).'-'.self::$shortcode_count;
 
 		if ( empty( $title ) ) :
 
@@ -173,7 +205,7 @@ class OLT_Accordion_Shortcode {
 		$attr['collapsible'] = self::eval_bool( $atts['collapsible'] );
 		$attr['fillSpace'] 	= self::eval_bool( $atts['fillspace'] );
 
-		self::$current_accordion_id = empty( $atts['id'] ) ? 'random-accordion-id-'.rand( 0,1000 ) : trim( sanitize_title_with_dashes( $atts['id'] ) );
+		self::$current_accordion_id = empty( $atts['id'] ) ? 'random-accordion-id-'.rand( 0,1000 ) : self::selector_safe_id( $atts['id'] );
 
 		if ( $attr['collapsible'] ) {
 			if ( ! is_int( $atts['active'] ) ) {
